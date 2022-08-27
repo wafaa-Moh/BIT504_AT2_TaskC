@@ -16,12 +16,13 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
 	 private final static Color BACKGROUND_COLOUR = Color.BLACK;
      private final static int TIMER_DELAY = 5;
      
+     private final static int BALL_MOVEMENT_SPEED = 2;
+     
      GameState gameState = GameState.INITIALISING;
-     
-     
 
      Ball ball;
      Paddle paddle1, paddle2;
+     
 	public PongPanel() {
 		// TODO Auto-generated constructor stub
 		setBackground(BACKGROUND_COLOUR); //setting background color
@@ -34,12 +35,16 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
 	 private void update() {
          switch(gameState) {
              case INITIALISING: {
-          	   createObjects();
-                 gameState = GameState.PLAYING;
-                
+          	   	 createObjects();
+          	   	 gameState = GameState.PLAYING;
+          	   	 ball.setXVelocity(BALL_MOVEMENT_SPEED);
+          	   	 ball.setYVelocity(BALL_MOVEMENT_SPEED);
                  break;
              }
              case PLAYING: {
+            	 moveObject(paddle1);
+                 moveObject(paddle2);
+                 moveObject(ball);            // Move ball
                  break;
              }
              case GAMEOVER: {
@@ -53,6 +58,11 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
         paddle1 = new Paddle(Player.One, getWidth(), getHeight());
         paddle2 = new Paddle(Player.Two, getWidth(), getHeight());
     }
+	
+	private void moveObject(Sprite object) {
+	      object.setXPosition(object.getXPosition() + object.getXVelocity(),getWidth());
+	      object.setYPosition(object.getYPosition() + object.getYVelocity(),getHeight());
+	 }
 	
 	 private void paintDottedLine(Graphics g) {
          Graphics2D g2d = (Graphics2D) g.create();
@@ -75,14 +85,30 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent event) {
 		// TODO Auto-generated method stub
+		if(event.getKeyCode() == KeyEvent.VK_W) {
+            paddle1.setYVelocity(-1);
+        } else if(event.getKeyCode() == KeyEvent.VK_S) {
+            paddle1.setYVelocity(1);
+        }
+        if(event.getKeyCode() == KeyEvent.VK_UP) {
+            paddle2.setYVelocity(-1);
+        } else if(event.getKeyCode() == KeyEvent.VK_DOWN) {
+            paddle2.setYVelocity(1);
+        }
 		
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent event) {
 		// TODO Auto-generated method stub
+		 if(event.getKeyCode() == KeyEvent.VK_W || event.getKeyCode() == KeyEvent.VK_S) {
+             paddle1.setYVelocity(0);
+         }
+         if(event.getKeyCode() == KeyEvent.VK_UP || event.getKeyCode() == KeyEvent.VK_DOWN) {
+             paddle2.setYVelocity(0);
+         }
 		
 	}
 
