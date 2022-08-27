@@ -58,6 +58,7 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
                  moveObject(ball);            // Move ball
                  checkWallBounce();           // Check for wall bounce
                  checkPaddleBounce();         // Check for paddle bounce
+                 checkWin();        // Check if the game has been won
                  break;
              }
              case GAMEOVER: {
@@ -136,6 +137,16 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
        g.drawString(leftScore, SCORE_TEXT_X, SCORE_TEXT_Y);
        g.drawString(rightScore, getWidth()-SCORE_TEXT_X, SCORE_TEXT_Y);
    }
+  	
+  	private void checkWin() {
+        if(player1Score >= POINTS_TO_WIN) {
+            gameWinner = Player.One;
+            gameState = GameState.GAMEOVER;
+        } else if(player2Score >= POINTS_TO_WIN) {
+            gameWinner = Player.Two;
+            gameState = GameState.GAMEOVER;
+        }
+    }
 
 
 
