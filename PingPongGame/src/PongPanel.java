@@ -1,5 +1,6 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -22,6 +23,16 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
 
      Ball ball;
      Paddle paddle1, paddle2;
+     
+     private final static int SCORE_TEXT_X = 100;
+     private final static int SCORE_TEXT_Y = 100;
+     private final static int SCORE_FONT_SIZE = 50;
+     private final static String SCORE_FONT_FAMILY = "Serif";
+     
+     private final static int POINTS_TO_WIN = 3;
+     int player1Score = 0, player2Score = 0;
+     Player gameWinner;
+
      
 	public PongPanel() {
 		// TODO Auto-generated constructor stub
@@ -83,12 +94,12 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
          if(ball.getXPosition() <= 0) {
              // Hit left side of screen
              ball.setXVelocity(-ball.getXVelocity());
-            
+             addScore(Player.Two);
              resetBall();
          } else if(ball.getXPosition() >= getWidth() - ball.getWidth()) {
              // Hit right side of screen
              ball.setXVelocity(-ball.getXVelocity());
-             
+             addScore(Player.One);
              resetBall();
          }
          if(ball.getYPosition() <= 0 || ball.getYPosition() >= getHeight() - ball.getHeight()) {
@@ -109,6 +120,25 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
   	  private void resetBall() {
   	           ball.resetToInitialPosition();
   	  }
+  	  
+  	private void addScore(Player player) {
+        if(player == Player.One) {
+            player1Score++;
+        } else if(player == Player.Two) {
+            player2Score++;
+        }
+    }
+  	private void paintScores(Graphics g) {
+        Font scoreFont = new Font(SCORE_FONT_FAMILY, Font.BOLD, SCORE_FONT_SIZE);
+       String leftScore = Integer.toString(player1Score);
+       String rightScore = Integer.toString(player2Score);
+       g.setFont(scoreFont);
+       g.drawString(leftScore, SCORE_TEXT_X, SCORE_TEXT_Y);
+       g.drawString(rightScore, getWidth()-SCORE_TEXT_X, SCORE_TEXT_Y);
+   }
+
+
+
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -152,6 +182,7 @@ public class PongPanel extends JPanel implements ActionListener,KeyListener{
               paintSprite(g, ball);
               paintSprite(g, paddle1);
               paintSprite(g, paddle2);
+              paintScores(g);
               
           }
 
